@@ -1,0 +1,287 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  --azul: #3B82F6;
+  --verde: #10B981;
+  --amarillo: #F59E0B;
+  --rojo: #EF4444;
+  --fondo: #F3F4F6;
+  --blanco: #FFFFFF;
+  --borde: #E5E7EB;
+}
+
+body {
+  background: var(--fondo);
+  color: #1F2937;
+}
+
+.oculto { display: none !important; }
+
+.dashboard-contenedor {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar Alumno */
+.sidebar-alumno {
+  width: 250px;
+  background: white;
+  border-right: 1px solid var(--borde);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  color: var(--azul);
+  margin-bottom: 25px;
+}
+.logo-sidebar h2 { font-size: 18px; color: #1F2937; }
+
+.nav-alumno {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4B5563;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.nav-item:hover, .nav-item.activo {
+  background: #EFF6FF;
+  color: var(--azul);
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--borde);
+  padding-top: 15px;
+}
+
+.btn-salir {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: white;
+  cursor: pointer;
+  color: var(--rojo);
+  font-weight: bold;
+}
+
+/* Contenido */
+.contenido-alumno {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.header-alumno {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #DBEAFE;
+  color: var(--azul);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 6px;
+}
+
+.perfil-tag {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--borde);
+}
+
+.tarjetas-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta {
+  background: white;
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 20px;
+}
+.tarjeta h2 { font-size: 32px; margin: 8px 0; }
+.amarillo { color: var(--amarillo); }
+.azul { color: var(--azul); }
+.badge-ok { color: var(--verde); font-size: 12px; font-weight: bold; }
+
+.card-blanca {
+  background: white;
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.desc { font-size: 13px; color: #6B7280; margin-top: 4px; margin-bottom: 15px; }
+
+/* Tarjetas de Tarea */
+.item-tarea {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.item-tarea.entregada {
+  background: #ECFDF5;
+  border-color: #A7F3D0;
+}
+
+.meta-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.tag-materia {
+  background: #DBEAFE;
+  color: #1E40AF;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+}
+.tag-profe {
+  background: #F3E8FF;
+  color: #6B21A8;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.btn-entregar-tarea {
+  background: var(--azul);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Calendario Grid */
+.calendario-grid, .dias-contenedor {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+.dia-encabezado {
+  font-weight: bold;
+  color: #9CA3AF;
+  font-size: 12px;
+  padding: 8px;
+  text-transform: uppercase;
+}
+.dia-celda {
+  min-height: 85px;
+  background: #F9FAFB;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 8px;
+  text-align: left;
+  font-size: 12px;
+  transition: background 0.2s;
+}
+.dia-celda.con-tarea {
+  background: #FEF3C7;
+  border-color: #FCD34D;
+}
+.pill-tarea-cal {
+  font-size: 10px;
+  background: #FDE68A;
+  color: #78350F;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.alerta-faltas {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  padding: 16px;
+  border-radius: 12px;
+  color: #065F46;
+}
+
+/* Tablas */
+.tabla-notas {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+.tabla-notas th, .tabla-notas td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--borde);
+  font-size: 13px;
+  text-align: left;
+}
+.tabla-notas th { color: #6B7280; font-weight: bold; }
+
+/* Modal */
+.modal-fondo {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  z-index: 100;
+}
+.modal-contenido {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  width: 100%;
+  max-width: 480px;
+}

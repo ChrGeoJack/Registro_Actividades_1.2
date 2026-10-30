@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú de Maestro - Portal Escolar CETIS 101</title>
+  <link rel="stylesheet" href="css/maestro.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="dashboard-contenedor">
+    <!-- Barra Lateral del Maestro -->
+    <aside class="sidebar-maestro">
+      <div class="logo-sidebar">
+        <i class="fa-solid fa-school"></i>
+        <div>
+          <h2>CETIS 101</h2>
+          <small>Portal Docente</small>
+        </div>
+      </div>
+
+      <nav class="nav-maestro">
+        <button class="nav-item activo" onclick="cambiarPestana('clases')">
+          <i class="fa-solid fa-chalkboard"></i> Mis Clases
+        </button>
+        <button class="nav-item" onclick="cambiarPestana('subir-tarea')">
+          <i class="fa-solid fa-file-circle-plus"></i> + Subir Tarea
+        </button>
+        <button class="nav-item" onclick="cambiarPestana('asistencia')">
+          <i class="fa-solid fa-clipboard-user"></i> Pase de Lista
+        </button>
+        <button class="nav-item" onclick="cambiarPestana('entregas')">
+          <i class="fa-solid fa-box-archive"></i> Revisar Entregas
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p><strong>Prof. Roberto Mendoza</strong></p>
+        <small>Maestro@cetis101.org</small>
+        <button class="btn-salir" onclick="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal del Maestro -->
+    <main class="contenido-maestro">
+
+      <!-- PESTAÑA 1: MIS CLASES (VARIAS CLASES POR MAESTRO) -->
+      <section id="tabClases" class="seccion-tab">
+        <div class="header-seccion">
+          <div>
+            <h1>Mis Clases y Materias</h1>
+            <p>Gestiona los grupos y materias que impartes en este semestre.</p>
+          </div>
+          <button class="btn-primario" onclick="abrirModalClase()">+ Nueva Clase</button>
+        </div>
+
+        <div class="grid-clases" id="listaClases">
+          <!-- Renderizado por JS -->
+        </div>
+      </section>
+
+      <!-- PESTAÑA 2: SUBIR TAREA -->
+      <section id="tabSubirTarea" class="seccion-tab oculto">
+        <div class="card-formulario">
+          <div class="card-header">
+            <i class="fa-solid fa-cloud-arrow-up icono-header"></i>
+            <div>
+              <h2>Publicar Tarea Escolar</h2>
+              <p>La tarea se añadirá automáticamente al <strong>Calendario</strong> y al <strong>Menú de Tareas</strong> de los alumnos.</p>
+            </div>
+          </div>
+
+          <form id="formNuevaTarea" onsubmit="guardarTarea(event)">
+            <div class="fila-2">
+              <div class="campo">
+                <label>Clase y Materia que la sube:</label>
+                <select id="selectClaseTarea" required>
+                  <option value="Matemáticas V - 5°A">Matemáticas V - Grupo 5°A</option>
+                  <option value="Cálculo Diferencial - 5°B">Cálculo Diferencial - Grupo 5°B</option>
+                  <option value="Física II - 4°A">Física II - Grupo 4°A</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label>Qué maestro la subió:</label>
+                <input type="text" id="inputMaestroNombre" value="Prof. Roberto Mendoza" readonly>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Título de la Tarea:</label>
+              <input type="text" id="inputTituloTarea" placeholder="Ej. Taller: Cálculo de Derivadas y Límites" required>
+            </div>
+
+            <div class="campo">
+              <label>Instrucciones detalladas para los alumnos:</label>
+              <textarea id="inputInstrucciones" rows="4" placeholder="Explica los ejercicios, formato solicitado (PDF/Word), hojas milimétricas..." required></textarea>
+            </div>
+
+            <div class="fila-3">
+              <div class="campo">
+                <label>Fecha de Entrega (se coloca en Calendario):</label>
+                <input type="date" id="inputFechaEntrega" required>
+              </div>
+              <div class="campo">
+                <label>Hora límite:</label>
+                <input type="time" id="inputHoraEntrega" value="23:59" required>
+              </div>
+              <div class="campo">
+                <label>Puntaje Máximo:</label>
+                <input type="number" id="inputPuntos" value="10" min="1" max="100" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-publicar">
+              <i class="fa-solid fa-upload"></i> Publicar Tarea en el Calendario de Alumnos
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 3: PASE DE LISTA POR ALUMNO -->
+      <section id="tabAsistencia" class="seccion-tab oculto">
+        <div class="card-formulario">
+          <div class="card-header">
+            <i class="fa-solid fa-calendar-check icono-header"></i>
+            <div>
+              <h2>Pase de Lista Diario por Alumno</h2>
+              <p>Registra la asistencia de cada alumno para calcular su porcentaje y semáforo de faltas.</p>
+            </div>
+          </div>
+
+          <div class="filtros-asistencia">
+            <div class="campo">
+              <label>Clase / Materia:</label>
+              <select id="asistenciaClase">
+                <option value="Matemáticas V - 5°A">Matemáticas V - Grupo 5°A</option>
+                <option value="Física II - 4°A">Física II - Grupo 4°A</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Fecha de la Sesión:</label>
+              <input type="date" id="asistenciaFecha">
+            </div>
+          </div>
+
+          <table class="tabla-asistencia">
+            <thead>
+              <tr>
+                <th>Alumno</th>
+                <th>Correo Institucional</th>
+                <th style="text-align: center;">Estatus de Asistencia</th>
+                <th>Observación / Nota</th>
+              </tr>
+            </thead>
+            <tbody id="filasAlumnosAsistencia">
+              <!-- Renderizado por JS -->
+            </tbody>
+          </table>
+
+          <button class="btn-guardar-asistencia" onclick="guardarAsistencia()">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Pase de Lista
+          </button>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 4: REVISAR ENTREGAS -->
+      <section id="tabEntregas" class="seccion-tab oculto">
+        <div class="card-formulario">
+          <h2>Entregas de Tareas de Alumnos</h2>
+          <p class="desc">Revisa los trabajos subidos y califícalos con retroalimentación:</p>
+          <div id="listaEntregas" style="margin-top: 15px;"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: NUEVA CLASE -->
+  <div id="modalNuevaClase" class="modal-fondo oculto">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>Crear Nueva Clase</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalClase()">✕</button>
+      </div>
+      <form onsubmit="crearClase(event)">
+        <div class="campo">
+          <label>Nombre de la Clase y Grupo:</label>
+          <input type="text" id="nuevaClaseNombre" placeholder="Ej. Álgebra Lineal - Grupo 3°C" required>
+        </div>
+        <div class="campo">
+          <label>Materia:</label>
+          <input type="text" id="nuevaClaseMateria" placeholder="Ej. Álgebra Lineal" required>
+        </div>
+        <div class="campo">
+          <label>Horario:</label>
+          <input type="text" id="nuevaClaseHorario" placeholder="Ej. Mar, Jue • 08:00 - 09:40 hrs" required>
+        </div>
+        <button type="submit" class="btn-publicar" style="width: 100%;">Registrar Clase</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/maestro.js"></script>
+</body>
+</html>

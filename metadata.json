@@ -1,0 +1,6 @@
+{
+  "name": "Mi Portal Escolar - Classroom & Seguimiento Académico",
+  "description": "Portal escolar estilo Classroom para seguimiento académico de alumnos y profesores: tareas, entregas, asistencia por parcial, calificaciones y simulador 'Con cuánto paso el semestre' con alertas de fechas límite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

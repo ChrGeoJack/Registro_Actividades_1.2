@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú de Alumno - Portal Escolar CETIS 101</title>
+  <link rel="stylesheet" href="css/alumno.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="dashboard-contenedor">
+    <!-- Sidebar Alumno -->
+    <aside class="sidebar-alumno">
+      <div class="logo-sidebar">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <div>
+          <h2>CETIS 101</h2>
+          <small>Portal del Alumno</small>
+        </div>
+      </div>
+
+      <nav class="nav-alumno">
+        <button class="nav-item activo" onclick="cambiarSeccion('resumen')">
+          <i class="fa-solid fa-house"></i> Resumen
+        </button>
+        <button class="nav-item" onclick="cambiarSeccion('tareas')">
+          <i class="fa-solid fa-list-check"></i> Mis Tareas
+        </button>
+        <button class="nav-item" onclick="cambiarSeccion('calendario')">
+          <i class="fa-solid fa-calendar-days"></i> Calendario Escolar
+        </button>
+        <button class="nav-item" onclick="cambiarSeccion('asistencia')">
+          <i class="fa-solid fa-calendar-check"></i> Mi Asistencia
+        </button>
+        <button class="nav-item" onclick="cambiarSeccion('calificaciones')">
+          <i class="fa-solid fa-chart-simple"></i> Calificaciones
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p><strong>Carlos Ramírez</strong></p>
+        <small>Alumno@cetis101.org</small>
+        <button class="btn-salir" onclick="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido del Alumno -->
+    <main class="contenido-alumno">
+
+      <!-- ENCABEZADO -->
+      <header class="header-alumno">
+        <div>
+          <h1>¡Bienvenido, <span id="nombreAlumno">Carlos</span>!</h1>
+          <p>Semestre 2026-A • Grupo 5°A • CETIS 101</p>
+        </div>
+        <div class="perfil-tag">
+          <span class="avatar">C</span>
+          <small>Alumno@cetis101.org</small>
+        </div>
+      </header>
+
+      <!-- 1. RESUMEN -->
+      <section id="secResumen" class="seccion-alumno">
+        <div class="tarjetas-resumen">
+          <div class="tarjeta">
+            <small>Promedio General</small>
+            <h2>8.6</h2>
+            <span class="badge-ok">Vas aprobando</span>
+          </div>
+          <div class="tarjeta">
+            <small>Tareas Pendientes</small>
+            <h2 class="amarillo" id="numTareasPendientes">2</h2>
+            <p>5 entregadas</p>
+          </div>
+          <div class="tarjeta">
+            <small>Asistencia Parcial 1</small>
+            <h2 class="azul">92%</h2>
+            <p>2 faltas de 5 permitidas</p>
+          </div>
+        </div>
+
+        <div class="card-blanca" style="margin-top: 20px;">
+          <h3>Próximas Tareas a Vencer</h3>
+          <p class="desc">Tareas asignadas por tus profesores con entrega próxima:</p>
+          <div id="resumenProximasTareas" style="margin-top: 15px;"></div>
+        </div>
+      </section>
+
+      <!-- 2. MIS TAREAS (SUBIDAS POR CADA PROFESOR) -->
+      <section id="secTareas" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <h2>Tareas Subidas por tus Maestros</h2>
+          <p class="desc">Revisa qué maestro asignó la tarea, su materia y las instrucciones:</p>
+          <div id="contenedorTareas" class="lista-tareas">
+            <!-- Renderizado dinámico por JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CALENDARIO ESCOLAR (FECHAS DE ENTREGA) -->
+      <section id="secCalendario" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+            <div>
+              <h2>📅 Calendario de Fechas Límite</h2>
+              <p class="desc">Las tareas asignadas por tus maestros aparecen colocadas en su fecha correspondiente:</p>
+            </div>
+            <span style="font-weight:bold; font-size:13px; color:var(--azul);">Noviembre 2026</span>
+          </div>
+
+          <div class="calendario-grid">
+            <div class="dia-encabezado">Dom</div>
+            <div class="dia-encabezado">Lun</div>
+            <div class="dia-encabezado">Mar</div>
+            <div class="dia-encabezado">Mié</div>
+            <div class="dia-encabezado">Jue</div>
+            <div class="dia-encabezado">Vie</div>
+            <div class="dia-encabezado">Sáb</div>
+          </div>
+          <div class="dias-contenedor" id="diasCalendario">
+            <!-- Días renderizados con tareas -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. ASISTENCIA -->
+      <section id="secAsistencia" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <h2>Mi Registro de Asistencia</h2>
+          <div class="alerta-faltas">
+            <i class="fa-solid fa-shield-halved" style="font-size: 24px;"></i>
+            <div>
+              <strong>Semáforo de Faltas: Con derecho a examen</strong>
+              <p>Has tenido 2 faltas en el Parcial 1. Conforme al reglamento escolar (80%), te restan 3 faltas permitidas antes de perder derecho.</p>
+            </div>
+          </div>
+
+          <table class="tabla-notas" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Parcial</th>
+                <th>Días Totales</th>
+                <th>Asistencias</th>
+                <th>Faltas</th>
+                <th>% Cumplido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Parcial 1</td>
+                <td>25</td>
+                <td style="color:var(--verde); font-weight:bold;">23</td>
+                <td style="color:var(--rojo); font-weight:bold;">2</td>
+                <td><strong style="color:var(--azul);">92%</strong></td>
+              </tr>
+              <tr>
+                <td>Parcial 2</td>
+                <td colspan="4" style="color:#9CA3AF; font-style:italic;">En curso</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. CALIFICACIONES Y SIMULADOR -->
+      <section id="secCalificaciones" class="seccion-alumno oculto">
+        <!-- Banner del Simulador -->
+        <div class="simulador-banner">
+          <div class="simulador-banner-top">
+            <div class="simulador-banner-titulo">
+              <div class="simulador-icono">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <div>
+                <h2>Simulador: ¿Con cuánto paso el Semestre?</h2>
+                <p>Calcula la calificación exacta que necesitas en el Parcial 2 y Parcial 3 para aprobar o mantener tu beca.</p>
+              </div>
+            </div>
+            <button type="button" class="btn-restablecer" onclick="restablecerSimulador()">
+              <i class="fa-solid fa-rotate-left"></i> Restablecer
+            </button>
+          </div>
+
+          <!-- Selector de Metas de Calificación -->
+          <div class="simulador-metas-contenedor">
+            <div>
+              <span class="label-meta">Elige tu Meta de Promedio Final:</span>
+              <div class="botones-meta">
+                <button type="button" class="btn-meta activo" data-meta="6.0" onclick="cambiarMetaSimulador(6.0)">
+                  🎯 Pase Mínimo (6.0)
+                </button>
+                <button type="button" class="btn-meta" data-meta="7.5" onclick="cambiarMetaSimulador(7.5)">
+                  📈 Buen Desempeño (7.5)
+                </button>
+                <button type="button" class="btn-meta" data-meta="8.0" onclick="cambiarMetaSimulador(8.0)">
+                  ⭐ Para Beca (8.0)
+                </button>
+                <button type="button" class="btn-meta" data-meta="9.0" onclick="cambiarMetaSimulador(9.0)">
+                  🏆 Excelencia (9.0)
+                </button>
+              </div>
+            </div>
+            <div class="meta-activa-card">
+              <small>META ACTIVA</small>
+              <h3 id="labelMetaActiva">6.0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explicación de la Fórmula Oficial -->
+        <div class="formula-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>
+            <strong>Fórmula oficial DGETI / CETIS 101:</strong> 
+            <code>Promedio = (Parcial 1 + Parcial 2 + Parcial 3) ÷ 3</code>. 
+            Para aprobar con 6.0 necesitas acumular <strong>18 puntos</strong> entre los 3 parciales.
+          </p>
+        </div>
+
+        <!-- Tarjetas Interactivas por Materia -->
+        <div id="listaMateriasSimulador" class="grid-simulador">
+          <!-- Renderizado en tiempo real por alumno.js -->
+        </div>
+
+        <!-- Calculadora Personalizada Libre -->
+        <div class="card-blanca" style="margin-top: 24px;">
+          <div class="card-header-icono" style="margin-bottom: 16px;">
+            <i class="fa-solid fa-wand-magic-sparkles icono-header azul"></i>
+            <div>
+              <h3>Calculadora Rápida para Cualquier Materia</h3>
+              <p class="desc">Ingresa tu nota del Parcial 1 y tu meta para calcular al instante tu resultado.</p>
+            </div>
+          </div>
+
+          <div class="fila-3">
+            <div class="campo">
+              <label>Calificación Parcial 1 (Obtenida):</label>
+              <input type="number" id="calcP1" min="0" max="10" step="0.1" value="7.0" oninput="calcularPaseLibre()">
+            </div>
+            <div class="campo">
+              <label>Parcial 2 (Estimado o Tentativo):</label>
+              <input type="number" id="calcP2" min="0" max="10" step="0.1" placeholder="Opcional (ej. 7.5)" oninput="calcularPaseLibre()">
+            </div>
+            <div class="campo">
+              <label>Meta Deseada de Promedio:</label>
+              <select id="calcMeta" onchange="calcularPaseLibre()">
+                <option value="6.0">6.0 (Pase Mínimo Aprobatorio)</option>
+                <option value="7.0">7.0 (Regular)</option>
+                <option value="8.0">8.0 (Para Beca)</option>
+                <option value="9.0">9.0 (Honorífico / Mención)</option>
+                <option value="10.0">10.0 (Máximo)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="resultadoCalcLibre" class="resultado-libre-box">
+            <!-- Actualizado por JS -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: ENTREGAR TAREA -->
+  <div id="modalEntregaTarea" class="modal-fondo oculto">
+    <div class="modal-contenido">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 id="modalTareaTitulo">Subir Entrega de Tarea</h3>
+        <button onclick="cerrarModalEntrega()" style="background:none; border:none; font-size:16px; cursor:pointer;">✕</button>
+      </div>
+      <form onsubmit="completarEntrega(event)">
+        <p id="modalTareaInstrucciones" style="font-size:12px; color:#4B5563; margin-bottom:12px; background:#F9FAFB; padding:10px; border-radius:8px;"></p>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">Comentario o Resumen de tu trabajo:</label>
+          <textarea id="entregaComentario" rows="3" style="width:100%; padding:8px; border-radius:8px; border:1px solid #E5E7EB; font-size:12px;" placeholder="Escribe aquí tu respuesta o enlace..."></textarea>
+        </div>
+        <div style="margin-bottom:15px;">
+          <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">Archivo adjunto (PDF o Word):</label>
+          <input type="file" style="font-size:12px;">
+        </div>
+        <button type="submit" style="width:100%; background:var(--azul); color:white; border:none; padding:10px; border-radius:10px; font-weight:bold; cursor:pointer;">
+          Completar Entrega
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/alumno.js"></script>
+</body>
+</html>

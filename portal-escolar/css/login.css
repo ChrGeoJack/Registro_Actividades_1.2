@@ -1,0 +1,311 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', -apple-system, Roboto, sans-serif;
+}
+
+:root {
+  --azul: #3B82F6;
+  --azul-oscuro: #1D4ED8;
+  --morado: #8B5CF6;
+  --morado-oscuro: #6D28D9;
+  --verde: #10B981;
+  --rojo: #EF4444;
+  --fondo: #F3F4F6;
+  --blanco: #FFFFFF;
+  --borde: #E5E7EB;
+  --texto: #1F2937;
+  --texto-sec: #6B7280;
+}
+
+body {
+  background-color: var(--fondo);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+.oculto { display: none !important; }
+
+/* Contenedor Centrado */
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.auth-card {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 24px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.logo-circulo {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: #EFF6FF;
+  color: var(--azul);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 15px;
+}
+
+.logo-circulo.morado {
+  background: #FAF5FF;
+  color: var(--morado);
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--texto);
+}
+
+.subtitulo-rol {
+  font-size: 16px;
+  color: var(--azul);
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.desc {
+  font-size: 13px;
+  color: var(--texto-sec);
+  margin-top: 6px;
+}
+
+/* Grid de Selección: Maestro vs Alumno */
+.grid-roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 25px 0;
+  text-align: left;
+}
+
+@media (max-width: 580px) {
+  .grid-roles { grid-template-columns: 1fr; }
+}
+
+.card-rol {
+  padding: 22px;
+  border-radius: 18px;
+  border: 2px solid var(--borde);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-rol.maestro {
+  background: #FAF5FF;
+  border-color: #E9D5FF;
+}
+.card-rol.maestro:hover {
+  border-color: var(--morado);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(139, 92, 246, 0.15);
+}
+
+.card-rol.alumno {
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+}
+.card-rol.alumno:hover {
+  border-color: var(--azul);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.15);
+}
+
+.icono-rol {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.card-rol.maestro .icono-rol { background: #F3E8FF; color: var(--morado-oscuro); }
+.card-rol.alumno .icono-rol { background: #DBEAFE; color: var(--azul-oscuro); }
+
+.card-rol h3 {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.card-rol.maestro h3 { color: #581C87; }
+.card-rol.alumno h3 { color: #1E3A8A; }
+
+.card-rol p {
+  font-size: 12px;
+  color: var(--texto-sec);
+  line-height: 1.45;
+  margin-bottom: 14px;
+}
+
+.btn-rol {
+  font-size: 12px;
+  font-weight: 700;
+}
+.card-rol.maestro .btn-rol { color: var(--morado-oscuro); }
+.card-rol.alumno .btn-rol { color: var(--azul-oscuro); }
+
+/* Accesos Directos */
+.accesos-directos {
+  border-top: 1px solid var(--borde);
+  padding-top: 18px;
+}
+.accesos-directos small {
+  font-size: 11px;
+  color: var(--texto-sec);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.botones-ejemplo {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.chip:hover { opacity: 0.85; }
+.chip-maestro { background: #F3E8FF; color: var(--morado-oscuro); }
+.chip-alumno { background: #DBEAFE; color: var(--azul-oscuro); }
+
+/* Paso 2: Formulario */
+.top-barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.btn-volver {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--texto-sec);
+  cursor: pointer;
+}
+.btn-volver:hover { color: var(--texto); }
+
+.badge-rol {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.badge-maestro { background: #F3E8FF; color: var(--morado-oscuro); }
+.badge-alumno { background: #DBEAFE; color: var(--azul-oscuro); }
+
+.campo-grupo {
+  text-align: left;
+  margin: 20px 0;
+}
+.campo-grupo label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.input-contenedor {
+  position: relative;
+}
+
+.input-contenedor input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--borde);
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s;
+}
+.input-contenedor input:focus {
+  border-color: var(--azul);
+}
+
+.icono-ok {
+  position: absolute;
+  right: 12px;
+  top: 14px;
+  color: var(--verde);
+}
+
+.mensaje-validacion {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.mensaje-validacion.error { background: #FEF2F2; color: var(--rojo); border: 1px solid #FCA5A5; }
+.mensaje-validacion.valido { background: #ECFDF5; color: var(--verde); border: 1px solid #A7F3D0; }
+
+.btn-ingresar {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  background: var(--azul);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-ingresar.maestro { background: var(--morado); }
+.btn-ingresar:hover { opacity: 0.9; }
+
+.ejemplos-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid var(--borde);
+  text-align: left;
+}
+.btn-ejemplo {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  background: #F9FAFB;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}

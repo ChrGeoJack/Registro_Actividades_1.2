@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Escolar CETIS 101 - Maestro y Alumno</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- 1. PANTALLA DE ACCESO (ROLES Y LOGIN)       -->
+  <!-- ========================================== -->
+  <div id="pantallaAuth" class="auth-wrapper">
+    <!-- PASO 1: ¿QUÉ ERES? -->
+    <div id="stepRoleSelect" class="auth-card">
+      <div class="logo-circulo">
+        <i class="fa-solid fa-school"></i>
+      </div>
+      <h1>Portal Escolar CETIS 101</h1>
+      <h2 class="subtitulo-rol">¿Qué eres en la institución?</h2>
+      <p class="desc">Selecciona tu rol para acceder con tu cuenta institucional correspondiente:</p>
+
+      <div class="grid-roles">
+        <!-- Tarjeta Maestro -->
+        <div class="card-rol maestro" onclick="elegirRol('maestro')">
+          <div class="icono-rol">
+            <i class="fa-solid fa-chalkboard-user"></i>
+          </div>
+          <h3>Soy Maestro</h3>
+          <p>Gestiona varias clases, publica tareas con instrucciones y fechas de entrega, y realiza el pase de lista de tus alumnos.</p>
+          <span class="btn-rol">Continuar como Maestro →</span>
+        </div>
+
+        <!-- Tarjeta Alumno -->
+        <div class="card-rol alumno" onclick="elegirRol('alumno')">
+          <div class="icono-rol">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h3>Soy Alumno</h3>
+          <p>Consulta tus tareas de cada maestro, revisa el calendario con fechas límite, tus asistencias y calificaciones oficiales.</p>
+          <span class="btn-rol">Continuar como Alumno →</span>
+        </div>
+      </div>
+
+      <!-- Accesos Directos de Prueba -->
+      <div class="accesos-directos">
+        <small>Acceso rápido con cuentas de prueba:</small>
+        <div class="botones-ejemplo">
+          <button type="button" class="chip chip-maestro" onclick="autoLogin('Maestro@cetis101.org', 'maestro')">
+            👨‍🏫 Maestro@cetis101.org
+          </button>
+          <button type="button" class="chip chip-alumno" onclick="autoLogin('Alumno@cetis101.org', 'alumno')">
+            👨‍🎓 Alumno@cetis101.org
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 2: INGRESO DE CORREO INSTITUCIONAL -->
+    <div id="stepEmailLogin" class="auth-card oculto">
+      <div class="top-barra">
+        <button type="button" class="btn-volver" onclick="volverASeleccionRol()">
+          <i class="fa-solid fa-arrow-left"></i> Cambiar rol
+        </button>
+        <span id="badgeRolActivo" class="badge-rol"></span>
+      </div>
+
+      <div id="logoRol" class="logo-circulo"></div>
+      <h2 id="tituloLogin">Ingresa tu correo institucional</h2>
+      <p id="subtituloLogin" class="desc"></p>
+
+      <div class="campo-grupo">
+        <label id="labelCorreo">Correo Institucional</label>
+        <div class="input-contenedor">
+          <input type="text" id="correoInput" placeholder="usuario@cetis101.org" oninput="validarEnVivo()">
+          <i id="iconoCheck" class="fa-solid fa-circle-check icono-ok oculto"></i>
+        </div>
+        <div id="mensajeValidacion" class="mensaje-validacion oculto"></div>
+      </div>
+
+      <button id="btnIngresar" class="btn-ingresar" onclick="iniciarSesion()">
+        Ingresar al Portal
+      </button>
+
+      <div class="ejemplos-footer">
+        <small>Haz clic para autocompletar:</small>
+        <button id="btnEjemploRol" class="btn-ejemplo" onclick="llenarEjemplo()"></button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 2. MENÚ DE MAESTRO (PORTAL DOCENTE)         -->
+  <!-- ========================================== -->
+  <div id="pantallaMaestro" class="dashboard-contenedor oculto">
+    <!-- Barra Lateral del Maestro -->
+    <aside class="sidebar-portal maestro">
+      <div class="logo-sidebar">
+        <i class="fa-solid fa-school"></i>
+        <div>
+          <h2>CETIS 101</h2>
+          <small>Portal Docente</small>
+        </div>
+      </div>
+
+      <nav class="nav-portal">
+        <button class="nav-item activo" onclick="cambiarPestanaMaestro('clases')">
+          <i class="fa-solid fa-chalkboard"></i> Mis Clases
+        </button>
+        <button class="nav-item" onclick="cambiarPestanaMaestro('subir-tarea')">
+          <i class="fa-solid fa-file-circle-plus"></i> + Subir Tarea
+        </button>
+        <button class="nav-item" onclick="cambiarPestanaMaestro('asistencia')">
+          <i class="fa-solid fa-clipboard-user"></i> Pase de Lista
+        </button>
+        <button class="nav-item" onclick="cambiarPestanaMaestro('entregas')">
+          <i class="fa-solid fa-box-archive"></i> Revisar Entregas
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p><strong>Prof. Roberto Mendoza</strong></p>
+        <small>Maestro@cetis101.org</small>
+        <button class="btn-salir" onclick="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido Principal del Maestro -->
+    <main class="contenido-portal">
+      <!-- PESTAÑA: MIS CLASES -->
+      <section id="tabMaestroClases" class="seccion-maestro">
+        <div class="header-seccion">
+          <div>
+            <h1>Mis Clases y Materias</h1>
+            <p>Gestiona los grupos y materias que impartes en este semestre.</p>
+          </div>
+          <button class="btn-primario morado" onclick="abrirModalClase()">+ Nueva Clase</button>
+        </div>
+
+        <div class="grid-clases" id="listaClases">
+          <!-- Renderizado por JS -->
+        </div>
+      </section>
+
+      <!-- PESTAÑA: SUBIR TAREA -->
+      <section id="tabMaestroSubirTarea" class="seccion-maestro oculto">
+        <div class="card-blanca max-800">
+          <div class="card-header-icono">
+            <i class="fa-solid fa-cloud-arrow-up icono-header morado"></i>
+            <div>
+              <h2>Publicar Tarea Escolar</h2>
+              <p>La tarea se añadirá automáticamente al <strong>Calendario</strong> y al <strong>Menú de Tareas</strong> de los alumnos.</p>
+            </div>
+          </div>
+
+          <form id="formNuevaTarea" onsubmit="guardarTarea(event)">
+            <div class="fila-2">
+              <div class="campo">
+                <label>Clase y Materia que la sube:</label>
+                <select id="selectClaseTarea" required>
+                  <option value="Matemáticas V - Grupo 5°A">Matemáticas V - Grupo 5°A</option>
+                  <option value="Cálculo Diferencial - Grupo 5°B">Cálculo Diferencial - Grupo 5°B</option>
+                  <option value="Física II - Grupo 4°A">Física II - Grupo 4°A</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label>Qué maestro la subió:</label>
+                <input type="text" id="inputMaestroNombre" value="Prof. Roberto Mendoza" readonly>
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Título de la Tarea:</label>
+              <input type="text" id="inputTituloTarea" placeholder="Ej. Taller: Cálculo de Derivadas y Límites" required>
+            </div>
+
+            <div class="campo">
+              <label>Instrucciones detalladas para los alumnos:</label>
+              <textarea id="inputInstrucciones" rows="4" placeholder="Explica los ejercicios, formato solicitado (PDF/Word), hojas milimétricas..." required></textarea>
+            </div>
+
+            <div class="fila-3">
+              <div class="campo">
+                <label>Fecha de Entrega (se coloca en Calendario):</label>
+                <input type="date" id="inputFechaEntrega" required>
+              </div>
+              <div class="campo">
+                <label>Hora límite:</label>
+                <input type="time" id="inputHoraEntrega" value="23:59" required>
+              </div>
+              <div class="campo">
+                <label>Puntaje Máximo:</label>
+                <input type="number" id="inputPuntos" value="10" min="1" max="100" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-publicar morado">
+              <i class="fa-solid fa-upload"></i> Publicar Tarea en el Calendario de Alumnos
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PESTAÑA: PASE DE LISTA -->
+      <section id="tabMaestroAsistencia" class="seccion-maestro oculto">
+        <div class="card-blanca max-800">
+          <div class="card-header-icono">
+            <i class="fa-solid fa-calendar-check icono-header azul"></i>
+            <div>
+              <h2>Pase de Lista Diario por Alumno</h2>
+              <p>Registra la asistencia de cada alumno para calcular su porcentaje y semáforo de faltas.</p>
+            </div>
+          </div>
+
+          <div class="fila-2" style="margin-bottom: 15px;">
+            <div class="campo">
+              <label>Clase / Materia:</label>
+              <select id="asistenciaClase">
+                <option value="Matemáticas V - Grupo 5°A">Matemáticas V - Grupo 5°A</option>
+                <option value="Física II - Grupo 4°A">Física II - Grupo 4°A</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Fecha de la Sesión:</label>
+              <input type="date" id="asistenciaFecha">
+            </div>
+          </div>
+
+          <table class="tabla-datos">
+            <thead>
+              <tr>
+                <th>Alumno</th>
+                <th>Correo Institucional</th>
+                <th style="text-align: center;">Estatus de Asistencia</th>
+                <th>Observación / Nota</th>
+              </tr>
+            </thead>
+            <tbody id="filasAlumnosAsistencia">
+              <!-- Renderizado por JS -->
+            </tbody>
+          </table>
+
+          <button class="btn-primario azul" style="margin-top: 15px;" onclick="guardarAsistencia()">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Pase de Lista
+          </button>
+        </div>
+      </section>
+
+      <!-- PESTAÑA: REVISAR ENTREGAS -->
+      <section id="tabMaestroEntregas" class="seccion-maestro oculto">
+        <div class="card-blanca max-800">
+          <h2>Entregas de Tareas de Alumnos</h2>
+          <p class="desc">Revisa los trabajos subidos y califícalos con retroalimentación:</p>
+          <div id="listaEntregas" style="margin-top: 15px;"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- 3. MENÚ DE ALUMNO (PORTAL ESTUDIANTE)       -->
+  <!-- ========================================== -->
+  <div id="pantallaAlumno" class="dashboard-contenedor oculto">
+    <!-- Sidebar Alumno -->
+    <aside class="sidebar-portal alumno">
+      <div class="logo-sidebar">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <div>
+          <h2>CETIS 101</h2>
+          <small>Portal del Alumno</small>
+        </div>
+      </div>
+
+      <nav class="nav-portal">
+        <button class="nav-item activo" onclick="cambiarSeccionAlumno('resumen')">
+          <i class="fa-solid fa-house"></i> Resumen
+        </button>
+        <button class="nav-item" onclick="cambiarSeccionAlumno('tareas')">
+          <i class="fa-solid fa-list-check"></i> Mis Tareas
+        </button>
+        <button class="nav-item" onclick="cambiarSeccionAlumno('calendario')">
+          <i class="fa-solid fa-calendar-days"></i> Calendario Escolar
+        </button>
+        <button class="nav-item" onclick="cambiarSeccionAlumno('asistencia')">
+          <i class="fa-solid fa-calendar-check"></i> Mi Asistencia
+        </button>
+        <button class="nav-item" onclick="cambiarSeccionAlumno('calificaciones')">
+          <i class="fa-solid fa-chart-simple"></i> Calificaciones
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p><strong id="labelNombreAlumnoSidebar">Carlos Ramírez</strong></p>
+        <small id="labelCorreoAlumnoSidebar">Alumno@cetis101.org</small>
+        <button class="btn-salir" onclick="cerrarSesion()">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </aside>
+
+    <!-- Contenido del Alumno -->
+    <main class="contenido-portal">
+      <!-- ENCABEZADO -->
+      <header class="header-alumno">
+        <div>
+          <h1>¡Bienvenido, <span id="nombreAlumno">Carlos</span>!</h1>
+          <p>Semestre 2026-A • Grupo 5°A • CETIS 101</p>
+        </div>
+        <div class="perfil-tag">
+          <span class="avatar" id="avatarInicial">C</span>
+          <small id="correoHeader">Alumno@cetis101.org</small>
+        </div>
+      </header>
+
+      <!-- SECCIÓN 1: RESUMEN -->
+      <section id="secAlumnoResumen" class="seccion-alumno">
+        <div class="tarjetas-resumen">
+          <div class="tarjeta">
+            <small>Promedio General</small>
+            <h2>8.6</h2>
+            <span class="badge-ok">Vas aprobando</span>
+          </div>
+          <div class="tarjeta">
+            <small>Tareas Pendientes</small>
+            <h2 class="amarillo" id="numTareasPendientes">2</h2>
+            <p id="numTareasEntregadasLabel">1 entregada</p>
+          </div>
+          <div class="tarjeta">
+            <small>Asistencia Parcial 1</small>
+            <h2 class="azul">92%</h2>
+            <p>2 faltas de 5 permitidas</p>
+          </div>
+        </div>
+
+        <div class="card-blanca" style="margin-top: 20px;">
+          <h3>Próximas Tareas a Vencer</h3>
+          <p class="desc">Tareas asignadas por tus profesores con fecha de entrega próxima:</p>
+          <div id="resumenProximasTareas" style="margin-top: 15px;"></div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 2: MIS TAREAS (SUBIDAS POR CADA PROFESOR) -->
+      <section id="secAlumnoTareas" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <h2>Tareas Subidas por tus Maestros</h2>
+          <p class="desc">Revisa qué maestro asignó la tarea, su materia y las instrucciones:</p>
+          <div id="contenedorTareas" class="lista-tareas">
+            <!-- Renderizado dinámico por JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 3: CALENDARIO ESCOLAR (FECHAS DE ENTREGA) -->
+      <section id="secAlumnoCalendario" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+            <div>
+              <h2>📅 Calendario de Fechas Límite</h2>
+              <p class="desc">Las tareas asignadas por tus maestros aparecen colocadas en su fecha correspondiente:</p>
+            </div>
+            <span style="font-weight:bold; font-size:13px; color:var(--azul);">Noviembre 2026</span>
+          </div>
+
+          <div class="calendario-grid">
+            <div class="dia-encabezado">Dom</div>
+            <div class="dia-encabezado">Lun</div>
+            <div class="dia-encabezado">Mar</div>
+            <div class="dia-encabezado">Mié</div>
+            <div class="dia-encabezado">Jue</div>
+            <div class="dia-encabezado">Vie</div>
+            <div class="dia-encabezado">Sáb</div>
+          </div>
+          <div class="dias-contenedor" id="diasCalendario">
+            <!-- Días renderizados con tareas -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 4: ASISTENCIA -->
+      <section id="secAlumnoAsistencia" class="seccion-alumno oculto">
+        <div class="card-blanca">
+          <h2>Mi Registro de Asistencia</h2>
+          <div class="alerta-faltas">
+            <i class="fa-solid fa-shield-halved" style="font-size: 24px;"></i>
+            <div>
+              <strong>Semáforo de Faltas: Con derecho a examen</strong>
+              <p>Has tenido 2 faltas en el Parcial 1. Conforme al reglamento escolar (80%), te restan 3 faltas permitidas antes de perder derecho.</p>
+            </div>
+          </div>
+
+          <table class="tabla-datos" style="margin-top: 20px;">
+            <thead>
+              <tr>
+                <th>Parcial</th>
+                <th>Días Totales</th>
+                <th>Asistencias</th>
+                <th>Faltas</th>
+                <th>% Cumplido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Parcial 1</td>
+                <td>25</td>
+                <td style="color:var(--verde); font-weight:bold;">23</td>
+                <td style="color:var(--rojo); font-weight:bold;">2</td>
+                <td><strong style="color:var(--azul);">92%</strong></td>
+              </tr>
+              <tr>
+                <td>Parcial 2</td>
+                <td colspan="4" style="color:#9CA3AF; font-style:italic;">En curso</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECCIÓN 5: CALIFICACIONES Y SIMULADOR OFICIAL -->
+      <section id="secAlumnoCalificaciones" class="seccion-alumno oculto">
+        <!-- Banner del Simulador -->
+        <div class="simulador-banner">
+          <div class="simulador-banner-top">
+            <div class="simulador-banner-titulo">
+              <div class="simulador-icono">
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+              <div>
+                <h2>Simulador: ¿Con cuánto paso el Semestre?</h2>
+                <p>Calcula la calificación exacta que necesitas en el Parcial 2 y Parcial 3 para aprobar o mantener tu beca.</p>
+              </div>
+            </div>
+            <button type="button" class="btn-restablecer" onclick="restablecerSimulador()">
+              <i class="fa-solid fa-rotate-left"></i> Restablecer
+            </button>
+          </div>
+
+          <!-- Selector de Metas de Calificación -->
+          <div class="simulador-metas-contenedor">
+            <div>
+              <span class="label-meta">Elige tu Meta de Promedio Final:</span>
+              <div class="botones-meta">
+                <button type="button" class="btn-meta activo" data-meta="6.0" onclick="cambiarMetaSimulador(6.0)">
+                  🎯 Pase Mínimo (6.0)
+                </button>
+                <button type="button" class="btn-meta" data-meta="7.5" onclick="cambiarMetaSimulador(7.5)">
+                  📈 Buen Desempeño (7.5)
+                </button>
+                <button type="button" class="btn-meta" data-meta="8.0" onclick="cambiarMetaSimulador(8.0)">
+                  ⭐ Para Beca (8.0)
+                </button>
+                <button type="button" class="btn-meta" data-meta="9.0" onclick="cambiarMetaSimulador(9.0)">
+                  🏆 Excelencia (9.0)
+                </button>
+              </div>
+            </div>
+            <div class="meta-activa-card">
+              <small>META ACTIVA</small>
+              <h3 id="labelMetaActiva">6.0</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explicación de la Fórmula Oficial -->
+        <div class="formula-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <p>
+            <strong>Fórmula oficial DGETI / CETIS 101:</strong> 
+            <code>Promedio = (Parcial 1 + Parcial 2 + Parcial 3) ÷ 3</code>. 
+            Para aprobar con 6.0 necesitas acumular <strong>18 puntos</strong> entre los 3 parciales.
+          </p>
+        </div>
+
+        <!-- Tarjetas Interactivas por Materia -->
+        <div id="listaMateriasSimulador" class="grid-simulador">
+          <!-- Renderizado en tiempo real por app.js -->
+        </div>
+
+        <!-- Calculadora Personalizada Libre -->
+        <div class="card-blanca" style="margin-top: 24px;">
+          <div class="card-header-icono" style="margin-bottom: 16px;">
+            <i class="fa-solid fa-wand-magic-sparkles icono-header azul"></i>
+            <div>
+              <h3>Calculadora Rápida para Cualquier Materia</h3>
+              <p class="desc">Ingresa tu nota del Parcial 1 y tu meta para calcular al instante tu resultado.</p>
+            </div>
+          </div>
+
+          <div class="fila-3">
+            <div class="campo">
+              <label>Calificación Parcial 1 (Obtenida):</label>
+              <input type="number" id="calcP1" min="0" max="10" step="0.1" value="7.0" oninput="calcularPaseLibre()">
+            </div>
+            <div class="campo">
+              <label>Parcial 2 (Estimado o Tentativo):</label>
+              <input type="number" id="calcP2" min="0" max="10" step="0.1" placeholder="Opcional (ej. 7.5)" oninput="calcularPaseLibre()">
+            </div>
+            <div class="campo">
+              <label>Meta Deseada de Promedio:</label>
+              <select id="calcMeta" onchange="calcularPaseLibre()">
+                <option value="6.0">6.0 (Pase Mínimo Aprobatorio)</option>
+                <option value="7.0">7.0 (Regular)</option>
+                <option value="8.0">8.0 (Para Beca)</option>
+                <option value="9.0">9.0 (Honorífico / Mención)</option>
+                <option value="10.0">10.0 (Máximo)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="resultadoCalcLibre" class="resultado-libre-box">
+            <!-- Actualizado por JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- MODALES DE APOYO                            -->
+  <!-- ========================================== -->
+  <!-- Modal: Crear Clase (Maestro) -->
+  <div id="modalNuevaClase" class="modal-fondo oculto">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3>Crear Nueva Clase</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalClase()">✕</button>
+      </div>
+      <form onsubmit="crearClase(event)">
+        <div class="campo">
+          <label>Nombre de la Clase y Grupo:</label>
+          <input type="text" id="nuevaClaseNombre" placeholder="Ej. Álgebra Lineal - Grupo 3°C" required>
+        </div>
+        <div class="campo">
+          <label>Materia:</label>
+          <input type="text" id="nuevaClaseMateria" placeholder="Ej. Álgebra Lineal" required>
+        </div>
+        <div class="campo">
+          <label>Horario:</label>
+          <input type="text" id="nuevaClaseHorario" placeholder="Ej. Mar, Jue • 08:00 - 09:40 hrs" required>
+        </div>
+        <button type="submit" class="btn-primario morado" style="width: 100%;">Registrar Clase</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Entregar Tarea (Alumno) -->
+  <div id="modalEntregaTarea" class="modal-fondo oculto">
+    <div class="modal-contenido">
+      <div class="modal-header">
+        <h3 id="modalTareaTitulo">Subir Entrega de Tarea</h3>
+        <button class="btn-cerrar-modal" onclick="cerrarModalEntrega()">✕</button>
+      </div>
+      <form onsubmit="completarEntrega(event)">
+        <p id="modalTareaInstrucciones" class="box-instrucciones"></p>
+        <div class="campo">
+          <label>Comentario o Resumen de tu trabajo:</label>
+          <textarea id="entregaComentario" rows="3" placeholder="Escribe aquí tu respuesta o enlace..."></textarea>
+        </div>
+        <div class="campo">
+          <label>Archivo adjunto (PDF o Word):</label>
+          <input type="file">
+        </div>
+        <button type="submit" class="btn-primario azul" style="width:100%;">
+          Completar y Enviar Entrega
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
